@@ -16,7 +16,9 @@
 #' @return A new `CV_Printer` object.
 create_CV_object <-  function(data_location,
                               pdf_mode = FALSE,
-                              sheet_is_publicly_readable = TRUE) {
+                              sheet_is_publicly_readable = TRUE,
+                              cache_data = TRUE,
+                              resume_mode = FALSE) {
 
   cv <- list(
     pdf_mode = pdf_mode,
@@ -96,7 +98,10 @@ create_CV_object <-  function(data_location,
     ) %>%
     dplyr::arrange(desc(parse_dates(end))) %>%
     dplyr::mutate_all(~ ifelse(is.na(.), 'N/A', .))
+  if(resume_mode){
+  cv$entries_data %<>% dplyr::filter(as.logical(cv$entries_data$in_resume))
 
+  }
   cv
 }
 
@@ -181,6 +186,16 @@ print_text_block <- function(cv, label){
   invisible(strip_res$cv)
 }
 
+print_text_block_bullets <-function(cv,label,bullets = TRUE){
+  text_block <- dplyr::filter(cv$text_blocks, loc == label) %>%
+    dplyr::pull(text)
+
+  strip_res <- sanitize_links(cv, text_block)
+
+  cat(strip_res$text)
+
+  invisible(strip_res$cv)
+}
 
 
 #' @description Construct a bar chart of skills
@@ -211,7 +226,7 @@ print_links <- function(cv) {
   n_links <- length(cv$links)
   if (n_links > 0) {
     cat("
-Links {data-icon=link}
+Publications {data-icon=file-alt}
 --------------------------------------------------------------------------------
 
 <br>
