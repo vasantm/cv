@@ -4,14 +4,14 @@ author: Vasant Marur
 date: "`r Sys.Date()`"
 params:
   pdf_mode:
-    value: true
+    value: false
 output:
   pagedown::html_resume:
     css: ['dd_cv.css', 'resume']
     self_contained: true
 ---
 
-```{r, include=FALSE}
+```{r,cache=FALSE, cache.path="cache/", include=FALSE}
 knitr::opts_chunk$set(
   results='asis', 
   echo = FALSE
@@ -22,9 +22,11 @@ source("cv_printing_functions.r")
 
 # Read in all data and initialize a CV printer object
 CV <- create_CV_object(
-  data_location = "https://docs.google.com/spreadsheets/d/18zACMXUxmmmBl3ZQpG1HxSBzab_9UkJKRcHwAtG7P0/",  
-  pdf_mode = params$pdf_mode
-)
+  #data_location = "https://docs.google.com/spreadsheets/d/1zPRzApl5AE57R-lLE04KQchk1US88VpWPhDmKJa-srA",
+  data_location = "https://docs.google.com/spreadsheets/d/18zACMXUxmmmBl3ZQpG1HxSBzab_9UkJKRcHwAtG7P0c",  
+  pdf_mode = params$pdf_mode,
+  resume_mode = TRUE
+  )
 
 ```
 
@@ -45,20 +47,12 @@ if(params$pdf_mode) {
 Aside
 ================================================================================
 
-```{r}
-# Build interactive network of positions colored by section
-# and connected if they occurred in the same year
-datadrivencv::build_network_logo(CV$entries_data)
-```
+<!--```{r} -->
 
-
-```{r}
-if(params$pdf_mode){
-  cat("View this CV online with links at _vasantmarur.net/cv/_")
-} else {
-  cat("[<i class='fas fa-download'></i> Download a PDF of this CV](https://github.com/vmarur/cv/raw/master/vasantmarur_cv.pdf)")
-}
-```
+<!--# Build interactive network of positions colored by section -->
+<!--# and connected if they occurred in the same year -->
+<!--datadrivencv::build_network_logo(CV$entries_data) -->
+<!--``` -->
 
 Contact {#contact}
 --------------------------------------------------------------------------------
@@ -66,6 +60,11 @@ Contact {#contact}
 ```{r}
 CV %>% print_contact_info()
 ```
+<br>
+<br>
+<br>
+<br>
+<br>
 
 
 
@@ -76,14 +75,20 @@ Language Skills {#skills}
 CV %>% print_skill_bars()
 ```
 
-
+```{r}
+#if(params$pdf_mode){
+#  cat("View this CV online with links at _vasantmarur.net/cv/_")
+#} else {
+#  cat("[<i class='fas fa-download'></i> Download a PDF of this CV](https://github.com/vmarur/cv/raw/master/vasantmarur_cv.pdf)")
+#}
+```
 
 Disclaimer {#disclaimer}
 --------------------------------------------------------------------------------
 
 Made with the R package [**pagedown**](https://github.com/rstudio/pagedown). 
 
-The source code is available [on github.com/vasantm/cv](https://github.com/vasantm/cv).
+The source code is available [github.com/vasantm/cv](https://github.com/vasantm/cv).
 
 Last updated on `r Sys.Date()`.
 
@@ -98,8 +103,24 @@ Vasant Marur {#title}
 ```{r}
 # Note the special double pipe so we modify the CV object in place
 CV %<>% print_text_block("intro") 
+#CV %<>% print_section("intro") 
 ```
 
+Experience {data-icon=suitcase}
+--------------------------------------------------------------------------------
+
+::: aside
+```{r}
+#CV %<>% print_text_block('industry_experience_aside')
+```
+:::
+
+```{r}
+CV %<>% print_section('industry_positions')
+```
+
+<!-- These breaks just force a new page so section doesnt get cut off -->
+<br>
 
 
 Education {data-icon=graduation-cap data-concise=true}
@@ -110,90 +131,39 @@ CV %<>% print_section('education')
 ```
 
 
-
-Research Experience {data-icon=laptop}
+Publications {data-icon=file-alt}
 --------------------------------------------------------------------------------
+```{r}
+CV %<>% print_text_block('publication')
+```
+
+<!-- Research Experience {data-icon=laptop} -->
+<!-- -------------------------------------------------------------------------------- -->
 
 ```{r}
-CV %<>% print_section('research_positions')
+#CV %<>% print_section('research_positions')
 ```
 
 
-
-Industry Experience {data-icon=suitcase}
---------------------------------------------------------------------------------
+<!-- Selected Data Science Writing {data-icon=chart-line} -->
+<!-- -------------------------------------------------------------------------------- -->
 
 ::: aside
 ```{r}
-CV %<>% print_text_block('industy_experience_aside')
+#CV %<>% print_text_block('data_science_writing_aside')
 ```
 :::
 
 ```{r}
-CV %<>% print_section('industry_positions')
-```
-
-<!-- These breaks just force a new page so section doesnt get cut off -->
-<br>
-<br>
-<br>
-
-Teaching Experience {data-icon=chalkboard-teacher}
---------------------------------------------------------------------------------
-
-::: aside
-```{r}
-CV %<>% print_text_block('teaching_experience_aside')
-```
-:::
-
-```{r}
-CV %<>% print_section('teaching_positions')
+#CV %<>% print_section('data_science_writings')
 ```
 
 
-
-Selected Data Science Writing {data-icon=chart-line}
---------------------------------------------------------------------------------
-
-::: aside
-```{r}
-CV %<>% print_text_block('data_science_writing_aside')
-```
-:::
+<!-- Selected Publications, Posters, and Talks {data-icon=book} -->
+<!-- -------------------------------------------------------------------------------- -->
 
 ```{r}
-CV %<>% print_section('data_science_writings')
-```
-
-
-
-Selected Press (About)  {data-icon=newspaper}
---------------------------------------------------------------------------------
-
-```{r}
-CV %<>% print_section('about_me_press')
-```
-
-
-<br>
-<br>
-
-
-Selected Press (By)  {data-icon=newspaper}
---------------------------------------------------------------------------------
-
-```{r}
-CV %<>% print_section('by_me_press')
-```
-
-
-
-Selected Publications, Posters, and Talks {data-icon=book}
---------------------------------------------------------------------------------
-
-```{r}
-CV %<>% print_section('academic_articles')
+#CV %<>% print_section('academic_articles')
 ```
 
 
